@@ -5,7 +5,7 @@ module.exports = {
   "password": process.env.DOCKER_PASSWORD,
   "port": 5432,
   "database": process.env.DOCKER_DATABASE,
-  "entities": ["./src/modules/cars/entities/*.ts"],
+  "entities": ["./src/modules/**/entities/*.ts"],
   "migrations": ["./src/database/migrations/*.ts"],
   "cli": {
     "migrationsDir": "./src/database/migrations"
