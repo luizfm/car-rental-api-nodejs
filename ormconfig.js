@@ -5,9 +5,9 @@ module.exports = {
   "password": process.env.DOCKER_PASSWORD,
   "port": 5432,
   "database": process.env.DOCKER_DATABASE,
-  "entities": ["./src/modules/**/entities/*.ts"],
-  "migrations": ["./src/database/migrations/*.ts"],
+  "entities": ["./src/modules/**/infra/typeorm/entities/*.ts"],
+  "migrations": ["./src/shared/infra/typeorm/migrations/*.ts"],
   "cli": {
-    "migrationsDir": "./src/database/migrations"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
   }
 }
