@@ -39,6 +39,26 @@ class CarsRepository implements ICarsRepository {
 
     return car;
   }
+
+  async listAvailableCars(brand, category_id, name): Promise<Car[]> {
+    const carsQuery = await this.repository
+      .createQueryBuilder("cars")
+      .where("available = :available", { available: true });
+
+    if (brand) {
+      carsQuery.andWhere("cars.brand LIKE :brand", { brand: `%${brand}%` });
+    }
+
+    if (category_id) {
+      carsQuery.andWhere("cars.category_id LIKE :category_id", { category_id: `%${category_id}%` });
+    }
+
+    if (name) {
+      carsQuery.andWhere("cars.name LIKE :name", { name: `%${name}%` });
+    }
+
+    return await carsQuery.getMany();
+  }
 }
 
 export default CarsRepository;
