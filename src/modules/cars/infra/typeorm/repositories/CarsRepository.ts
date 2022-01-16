@@ -13,6 +13,7 @@ class CarsRepository implements ICarsRepository {
   }
 
   async create({
+    id,
     name,
     brand,
     description,
@@ -27,6 +28,7 @@ class CarsRepository implements ICarsRepository {
       fine_amount,
       daily_rate,
       description,
+      id,
     });
 
     await this.repository.save(car);
@@ -58,6 +60,10 @@ class CarsRepository implements ICarsRepository {
     }
 
     return await carsQuery.getMany();
+  }
+
+  async findCarById(car_id: string): Promise<Car> {
+    return await this.repository.findOne(car_id);
   }
 }
 
