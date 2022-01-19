@@ -21,7 +21,6 @@ class CreateCarSpecificationUseCase {
   ) {}
 
   async execute({ specifications_id, car_id }: IRequest): Promise<Car> {
-    console.log("aqui chegamos");
     const car = await this.carsRepository.findCarById(car_id);
 
     if (!car) {
@@ -29,8 +28,6 @@ class CreateCarSpecificationUseCase {
     }
 
     const specifications = await this.specificationsRepository.findByIds(specifications_id);
-
-    console.log("useCase", specifications);
 
     car.specifications = specifications;
 

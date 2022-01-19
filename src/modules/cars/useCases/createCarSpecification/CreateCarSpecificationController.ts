@@ -15,8 +15,6 @@ class CreateCarSpecificationController {
       specifications_id,
     });
 
-    console.log(car);
-
     return response.json(car);
   }
 }
