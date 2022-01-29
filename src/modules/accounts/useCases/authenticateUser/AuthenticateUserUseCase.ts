@@ -2,8 +2,11 @@ import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
+import auth from "@config/auth";
 import User from "@modules/accounts/infra/typeorm/entities/User";
 import IUsersRepository from "@modules/accounts/repositories/IUsersRepository";
+import IUsersTokenRepository from "@modules/accounts/repositories/IUsersTokenRepository";
+import IDateProvider from "@shared/container/providers/DateProvider/IDateProvider";
 import AppError from "@shared/errors/AppError";
 
 interface IRequest {
@@ -14,13 +17,18 @@ interface IRequest {
 interface IResponse {
   user: Pick<User, "email" | "name">;
   token: string;
+  refresh_token: string;
 }
 
 @injectable()
 class AuthenticateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("UsersTokenRepository")
+    private usersTokenRepository: IUsersTokenRepository,
+    @inject("DayjsDateProvider")
+    private dateProvider: IDateProvider
   ) {}
 
   async execute({ email, password }: IRequest): Promise<IResponse> {
@@ -36,9 +44,22 @@ class AuthenticateUserUseCase {
       throw new AppError("Email or password incorrect");
     }
 
+    const { expires_in, expires_in_refresh_token } = auth.jwt;
+
     const token = sign({}, process.env.JWT_SECRET_KEY, {
       subject: user.id,
-      expiresIn: "1d",
+      expiresIn: expires_in,
+    });
+
+    const refresh_token = sign({ email }, process.env.JWT_REFRESH_SECRET_KEY, {
+      subject: user.id,
+      expiresIn: `${expires_in_refresh_token}d`,
+    });
+
+    await this.usersTokenRepository.create({
+      user_id: user.id,
+      expires_date: this.dateProvider.addDays(expires_in_refresh_token),
+      refresh_token,
     });
 
     return {
@@ -47,6 +68,7 @@ class AuthenticateUserUseCase {
         email: user.email,
       },
       token,
+      refresh_token,
     };
   }
 }
