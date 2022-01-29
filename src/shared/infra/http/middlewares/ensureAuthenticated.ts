@@ -21,14 +21,14 @@ const ensureAuthenticated = async (request: Request, response: Response, next: N
     const { sub: user_id } = verify(token, process.env.JWT_REFRESH_SECRET_KEY) as IPayload;
 
     const usersTokenRepository = new UsersTokenRepository();
-    const user = await usersTokenRepository.findByUserIdAndRefreshToken(user_id, token);
+    const userToken = await usersTokenRepository.findByUserIdAndRefreshToken(user_id, token);
 
-    if (!user) {
+    if (!userToken) {
       throw new AppError("Users does not exists!", 401);
     }
 
     request.user = {
-      id: user.id,
+      id: userToken.user_id,
     };
 
     next();
