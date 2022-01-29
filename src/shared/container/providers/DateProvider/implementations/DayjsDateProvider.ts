@@ -20,6 +20,10 @@ class DayjsDateProvider implements IDateProvider {
 
     return compare;
   }
+
+  addDays(days: number): Date {
+    return dayjs().add(days, "day").toDate();
+  }
 }
 
 export default DayjsDateProvider;
