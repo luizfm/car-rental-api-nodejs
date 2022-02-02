@@ -11,16 +11,21 @@ interface IPayload {
   email: string;
 }
 
+interface IRefreshToken {
+  token: string;
+  refresh_token: string;
+}
+
 @injectable()
 class RefreshTokenUseCase {
   constructor(
     @inject("UsersTokenRepository")
     private usersTokenRepository: IUsersTokenRepository,
-    @inject("DayjsProvider")
+    @inject("DayjsDateProvider")
     private dayjsProvider: IDateProvider
   ) {}
 
-  async execute(token: string): Promise<string> {
+  async execute(token: string): Promise<IRefreshToken> {
     const { sub: user_id, email } = verify(token, process.env.JWT_REFRESH_SECRET_KEY) as IPayload;
 
     const userToken = await this.usersTokenRepository.findByUserIdAndRefreshToken(user_id, token);
@@ -31,9 +36,9 @@ class RefreshTokenUseCase {
 
     await this.usersTokenRepository.deleteById(userToken.id);
 
-    const { expires_in_refresh_token } = auth.jwt;
+    const { expires_in_refresh_token, expires_in } = auth.jwt;
 
-    const new_refresh_token = sign({ email }, process.env.JWT_REFRESH_SECRET_KEY, {
+    const refresh_token = sign({ email }, process.env.JWT_REFRESH_SECRET_KEY, {
       subject: user_id,
       expiresIn: `${expires_in_refresh_token}d`,
     });
@@ -43,10 +48,20 @@ class RefreshTokenUseCase {
     await this.usersTokenRepository.create({
       user_id,
       expires_date: token_expires_date,
-      refresh_token: new_refresh_token,
+      refresh_token: refresh_token,
     });
 
-    return new_refresh_token;
+    const newToken = sign({}, process.env.JWT_SECRET_KEY, {
+      subject: user_id,
+      expiresIn: `${expires_in}m`,
+    });
+
+    console.log(refresh_token, token, newToken);
+
+    return {
+      refresh_token,
+      token: newToken,
+    };
   }
 }
 
