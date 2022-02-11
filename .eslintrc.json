@@ -21,6 +21,7 @@
         "eslint-plugin-import-helpers"
     ],
     "rules": {
+        "no-use-before-define": "off",
         "prettier/prettier": "error",
         "camelcase": "off",
         "import/no-unresolved": "error",
@@ -53,7 +54,7 @@
         "warn",
         {
             "newlinesBetween": "always",
-            "groups": ["module", "/^@shared/", ["parent", "sibling", "index"]],
+            "groups": ["module", "/^@/", ["parent", "sibling", "index"]],
             "alphabetize": { "order": "asc", "ignoreCase": true }
         }
         ],
