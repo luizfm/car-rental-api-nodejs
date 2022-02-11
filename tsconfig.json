@@ -11,7 +11,9 @@
       "@shared/*": ["shared/*"],
       "@errors/*": ["errors/*"],
       "@utils/*": ["utils/*"]
-    },"resolveJsonModule": true, "outDir": "./dist",
+    },
+    "resolveJsonModule": true,
+    "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true

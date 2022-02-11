@@ -48,7 +48,7 @@ class AuthenticateUserUseCase {
 
     const token = sign({}, process.env.JWT_SECRET_KEY, {
       subject: user.id,
-      expiresIn: expires_in,
+      expiresIn: `${expires_in}m`,
     });
 
     const refresh_token = sign({ email }, process.env.JWT_REFRESH_SECRET_KEY, {
