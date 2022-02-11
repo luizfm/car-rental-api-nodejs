@@ -4,3 +4,4 @@ yarn.lock
 tmp/avatar/*
 tmp/cars/*
 coverage
+dist
