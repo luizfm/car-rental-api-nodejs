@@ -6,7 +6,7 @@ services:
     container_name: database_rentx
     restart: always
     ports:
-      - 5432:5432
+      - 7002:5432
     environment:
       - POSTGRES_USER=$DOCKER_USERNAME
       - POSTGRES_PASSWORD=$DOCKER_PASSWORD
