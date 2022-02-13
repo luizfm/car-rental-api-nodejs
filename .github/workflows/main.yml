@@ -43,7 +43,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/app/api-rentx
+            cd ~/app/car-rental-api-nodejs
             yarn
             ./node_modules/.bin/typeorm migration:run
             pm2 restart server
