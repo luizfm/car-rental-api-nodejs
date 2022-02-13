@@ -17,5 +17,4 @@ const diskStorage = {
   s3: S3StorageProvider,
 };
 
-console.log(diskStorage[process.env.DISK]);
 container.registerSingleton<IStorageProvider>("StorageProvider", diskStorage[process.env.DISK]);
