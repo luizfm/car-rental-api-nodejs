@@ -11,8 +11,6 @@ class UserProfileController {
 
     const user = await userProfileUseCase.execute(id);
 
-    console.log(user);
-
     return response.status(204).json({ avatar: user.avatar });
   }
 }
